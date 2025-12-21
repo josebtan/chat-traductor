@@ -3,20 +3,18 @@ import FriendsSidebar from "./FriendsSidebar";
 import ChatWindow from "./ChatWindow";
 
 export default function HomeScreen({ user }) {
+  const [friends, setFriends] = useState([]);
   const [selectedFriend, setSelectedFriend] = useState(null);
 
   return (
     <div className="home-layout">
       <FriendsSidebar
-        user={user}
+        friends={friends}
         selectedFriend={selectedFriend}
         onSelectFriend={setSelectedFriend}
       />
 
-      <ChatWindow
-        user={user}
-        friend={selectedFriend}
-      />
+      <ChatWindow friend={selectedFriend} />
     </div>
   );
 }

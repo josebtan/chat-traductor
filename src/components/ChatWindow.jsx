@@ -1,42 +1,26 @@
-export default function ChatWindow({ user, friend }) {
+export default function ChatWindow({ friend }) {
   if (!friend) {
     return (
-      <section className="chat-window empty">
-        <p>👈 Selecciona un amigo para comenzar a chatear</p>
-      </section>
+      <div className="chat-window">
+        <div className="chat-header">Chat</div>
+      </div>
     );
   }
 
   return (
-    <section className="chat-window">
-      <header className="chat-header">
-        <h3>{friend.nickname}</h3>
-        <small>
-          Idioma: {friend.language.toUpperCase()} · País: {friend.country}
-        </small>
-      </header>
-
-      <div className="chat-messages">
-        {/* Mensajes mock por ahora */}
-        <div className="message received">
-          <p>Hola 👋</p>
-          <small>Original</small>
-        </div>
-
-        <div className="message translated">
-          <p>Hello 👋</p>
-          <small>Traducción</small>
-        </div>
+    <div className="chat-window">
+      <div className="chat-header">
+        {friend.name}
       </div>
 
-      <form className="chat-input">
-        <input
-          type="text"
-          placeholder="Escribe un mensaje..."
-          disabled
-        />
-        <button disabled>Enviar</button>
-      </form>
-    </section>
+      <div className="chat-messages">
+        {/* mensajes */}
+      </div>
+
+      <div className="chat-input">
+        <input type="text" placeholder="Escribe un mensaje..." />
+        <button>Enviar</button>
+      </div>
+    </div>
   );
 }

@@ -15,10 +15,6 @@ const COUNTRIES = [
   { code: "BR", label: "Brasil 🇧🇷" }
 ];
 
-function generateUUID() {
-  return crypto.randomUUID();
-}
-
 export default function RegisterScreen({ onRegister }) {
   const [nickname, setNickname] = useState("");
   const [language, setLanguage] = useState("");
@@ -34,10 +30,11 @@ export default function RegisterScreen({ onRegister }) {
     }
 
     const userData = {
-      userId: generateUUID(),
+      userId: crypto.randomUUID(),
       nickname: nickname.trim(),
       language,
       country,
+      friends: [],
       createdAt: Date.now()
     };
 
@@ -49,9 +46,7 @@ export default function RegisterScreen({ onRegister }) {
     <div className="register-container">
       <div className="register-card">
         <h1 className="register-title">🌍 Bienvenido</h1>
-        <p className="register-text">
-          Configura tu perfil para comenzar
-        </p>
+        <p className="register-text">Configura tu perfil para comenzar</p>
 
         <form onSubmit={handleSubmit} autoComplete="on">
           <input
@@ -72,7 +67,7 @@ export default function RegisterScreen({ onRegister }) {
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
           >
-            <option value="">Idioma</option>
+            <option value="">Selecciona idioma</option>
             {LANGUAGES.map((lang) => (
               <option key={lang.code} value={lang.code}>
                 {lang.label}
@@ -87,7 +82,7 @@ export default function RegisterScreen({ onRegister }) {
             value={country}
             onChange={(e) => setCountry(e.target.value)}
           >
-            <option value="">País</option>
+            <option value="">Selecciona país</option>
             {COUNTRIES.map((c) => (
               <option key={c.code} value={c.code}>
                 {c.label}

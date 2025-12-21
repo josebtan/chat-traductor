@@ -1,35 +1,37 @@
-export default function FriendsSidebar({ user, selectedFriend, onSelectFriend }) {
-  // Amigos simulados por ahora
-  const friends = user.friends || [];
-
+export default function FriendsSidebar({
+  friends,
+  selectedFriend,
+  onSelectFriend,
+}) {
   return (
     <aside className="sidebar">
-      <div className="sidebar-header">
-        <h3>👥 Amigos</h3>
-      </div>
+      <h2>Amigos</h2>
 
-      <ul className="friends-list">
+      <div className="friend-list">
         {friends.length === 0 && (
-          <p className="empty-text">Aún no tienes amigos</p>
+          <p className="sidebar-empty">
+            No tienes amigos aún
+            <br />
+            Usa una invitación para empezar
+          </p>
         )}
 
         {friends.map((friend) => (
-          <li
-            key={friend.userId}
-            className={
-              selectedFriend?.userId === friend.userId
-                ? "friend-item active"
-                : "friend-item"
-            }
+          <div
+            key={friend.id}
+            className={`friend-item ${
+              selectedFriend?.id === friend.id ? "active" : ""
+            }`}
             onClick={() => onSelectFriend(friend)}
           >
-            <span className="friend-name">{friend.nickname}</span>
-            <span className="friend-meta">
-              {friend.language.toUpperCase()} · {friend.country}
-            </span>
-          </li>
+            {friend.name}
+          </div>
         ))}
-      </ul>
+      </div>
+
+      <button className="invite-button">
+        ➕ Invitar amigo
+      </button>
     </aside>
   );
 }
