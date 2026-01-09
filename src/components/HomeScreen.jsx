@@ -3,7 +3,11 @@ import FriendsSidebar from "./FriendsSidebar";
 import ChatWindow from "./ChatWindow";
 
 export default function HomeScreen({ user }) {
-  const [friends, setFriends] = useState([]);
+  // ✅ Inicialización correcta desde localStorage
+  const [friends, setFriends] = useState(() => {
+    return JSON.parse(localStorage.getItem("chatFriends")) || [];
+  });
+
   const [selectedFriend, setSelectedFriend] = useState(null);
 
   return (

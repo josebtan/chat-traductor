@@ -1,39 +1,66 @@
 import { useEffect, useState } from "react";
 import SplashScreen from "./components/SplashScreen";
-import RegisterScreen from "./components/RegisterScreen";
+import AuthScreen from "./components/AuthScreen";
 import HomeScreen from "./components/HomeScreen";
+import userService from "./services/userService";
 import "./index.css";
 
 function App() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
 
+  const handleInvitation = (currentUser) => {
+    const hash = window.location.hash;
+
+    if (!hash.startsWith("#/invite/")) return;
+
+    const inviteId = hash.replace("#/invite/", "");
+
+    const invitations =
+      JSON.parse(localStorage.getItem("chatInvitations")) || [];
+
+    const invitation = invitations.find((i) => i.id === inviteId);
+
+    if (!invitation || invitation.used || !currentUser) return;
+
+    const friends =
+      JSON.parse(localStorage.getItem("chatFriends")) || [];
+
+    friends.push({
+      id: invitation.id,
+      name: invitation.ownerName,
+    });
+
+    invitation.used = true;
+
+    localStorage.setItem("chatFriends", JSON.stringify(friends));
+    localStorage.setItem("chatInvitations", JSON.stringify(invitations));
+
+    window.location.hash = "";
+  };
+
   useEffect(() => {
-    const savedUser = localStorage.getItem("chatUser");
-    if (savedUser) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setUser(JSON.parse(savedUser));
-    }
+    const loadUser = async () => {
+      try {
+        const currentUser = await userService.getUser();
+        setUser(currentUser);
+        // Handle invitation after user is loaded
+        if (currentUser) {
+          handleInvitation(currentUser);
+        }
+      } catch (error) {
+        console.error('Error loading user:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    // Mostrar Splash por 2.5 segundos
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2500);
-
-    return () => clearTimeout(timer);
+    loadUser();
   }, []);
 
-  // Splash inicial
-  if (loading) {
-    return <SplashScreen />;
-  }
+  if (loading) return <SplashScreen />;
+  if (!user) return <AuthScreen onRegister={setUser} />;
 
-  // Registro local
-  if (!user) {
-    return <RegisterScreen onRegister={setUser} />;
-  }
-
-  // Pantalla principal
   return <HomeScreen user={user} />;
 }
 
